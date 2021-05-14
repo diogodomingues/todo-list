@@ -40,4 +40,12 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    /**
+     * Relationship with TodoList
+     */
+    public function todoList()
+    {
+        return $this->hasMany('App\Models\TodoList', 'user_id', 'id');
+    }
 }
