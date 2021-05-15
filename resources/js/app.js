@@ -30,7 +30,11 @@ import HomeComponent from  './components/HomeComponent.vue';
  * or customize the JavaScript scaffolding to fit your unique needs.
  */
 
+ import vuetify from './vuetify'
+
+
 const app = new Vue({
+    vuetify,
     el: '#app',
     components: { HomeComponent }
 });
