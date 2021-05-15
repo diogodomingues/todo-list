@@ -7,6 +7,8 @@ use App\Services\UserService;
 
 class TodoListService extends Service
 {   
+    const USER_NOT_FOUND = 'User not found';
+    
     /**
      * @var UserService
      */
@@ -29,16 +31,38 @@ class TodoListService extends Service
     /**
      * get all to-do lists for a given user
      */
-    public function getAllTodoListsByUser(int $user)
+    public function getAllTodoListsByUser(int $userId)
     {
-        $result = [];
-
-        $user = $this->userService->getUserById($user);
+        $user = $this->userService->getUserById($userId);
 
         if (!empty($user)) {
-            $result = $this->repository->getAllTodoListsByUser($user->id);
+           return $this->repository->getAllTodoListsByUser($user->id);
         }
 
-        return $result;
+        return self::USER_NOT_FOUND;
     }
+
+    /**
+     * create new to-do list
+     */
+    public function createTodoList(array $data)
+    {
+        $user = $this->userService->getUserById($data['userId']);
+
+        if (!empty($user)) {
+            return  $this->repository->createTodoList($data);
+        }
+
+        return self::USER_NOT_FOUND;
+    }
+
+    /**
+     * delete to-do list
+     */
+    public function deleteTodoList(int $todoId)
+    {
+        return $this->repository->deleteTodoList($todoId);
+    }
+
+    
 }

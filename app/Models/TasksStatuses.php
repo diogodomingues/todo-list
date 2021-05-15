@@ -27,7 +27,7 @@ class TasksStatuses extends Model
      * @var array
      */
     protected $hidden = [
-        'id',
+        //
     ];
 
     /**

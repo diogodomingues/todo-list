@@ -28,7 +28,7 @@ class TodoList extends Model
      * @var array
      */
     protected $hidden = [
-        'id',
+        //
     ];
 
     /**
