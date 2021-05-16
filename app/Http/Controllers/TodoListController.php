@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Services\TodoListService;
 use Illuminate\Http\Response;
-use Symfony\Component\Console\Input\Input;
 use \Validator;
 
 class TodoListController extends Controller 
@@ -88,10 +87,6 @@ class TodoListController extends Controller
      */
     public function deleteTodoList(Request $request, int $todoId)
     {
-        if (empty($todoId)) {
-            return response()->json("Empty to-do id", Response::HTTP_INTERNAL_SERVER_ERROR);
-        }
-
         $result = $this->service->deleteTodoList($todoId);
 
         return $result;

@@ -43,6 +43,14 @@ class TodoListService extends Service
     }
 
     /**
+     * get to-do list by it's ID
+     */
+    public function getTodoListById(int $todoId)
+    {
+        return $this->repository->getTodoListById($todoId);
+    }
+
+    /**
      * create new to-do list
      */
     public function createTodoList(array $data)
@@ -62,7 +70,5 @@ class TodoListService extends Service
     public function deleteTodoList(int $todoId)
     {
         return $this->repository->deleteTodoList($todoId);
-    }
-
-    
+    }    
 }

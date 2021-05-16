@@ -5,9 +5,10 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class TasksStatuses extends Model
+class TasksStatus extends Model
 {
-    use SoftDeletes;
+    protected $table   = 'tasks_status';
+    protected $primaryKey = 'id';
 
     /**
      * The attributes that are mass assignable.
@@ -18,7 +19,7 @@ class TasksStatuses extends Model
         'code',
         'description',
         'created_at',
-        'deleted_at'
+        'updated_at'
     ];
 
     /**
@@ -27,7 +28,8 @@ class TasksStatuses extends Model
      * @var array
      */
     protected $hidden = [
-        //
+        'created_at',
+        'updated_at'
     ];
 
     /**

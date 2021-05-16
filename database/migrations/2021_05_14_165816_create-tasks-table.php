@@ -24,6 +24,7 @@ class CreateTasksTable extends Migration
             $table->bigInteger('status_id')->unsigned()->comment('status of the task');;
             $table->foreign('status_id')->references('id')->on('tasks_status');
 
+            $table->softDeletes();
             $table->timestamps();
         });
     }

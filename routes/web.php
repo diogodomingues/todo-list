@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TodoListController;
 use App\Http\Controllers\TaskController;
+use App\Http\Controllers\TasksStatusesController;
 
 /*
 |--------------------------------------------------------------------------
@@ -16,7 +17,7 @@ use App\Http\Controllers\TaskController;
 */
 
 Route::prefix('todolist')
-    ->middleware('auth')
+    // ->middleware('auth')
     ->group(function ($router) {
         $router->get('/all', [TodoListController::class, 'getAllTodoLists']);
         $router->get('by-user', [TodoListController::class, 'getAllTodoListsByUser']);
@@ -25,13 +26,14 @@ Route::prefix('todolist')
     });
 
 Route::prefix('tasks')
-    ->middleware('auth')
+    // ->middleware('auth')
     ->group(function ($router) {
-        $router->get('all', 'TaskController@getAllTodoLists');
-        $router->get('by-todo-list/{id}', 'TaskController@getAllTodoListsByUser');
-        $router->post('create', 'TaskController@createTodoList');
-        $router->put('update/{id}', 'TaskController@updateTodoList');
-        $router->delete('delete/{id}', 'TaskController@deleteTodoList');
+        $router->get('all', [TaskController::class, 'getAllTasks']);
+        $router->get('by-todo-list', [TaskController::class, 'getAllTasksByTodoList']);
+        $router->post('create', [TaskController::class, 'createTask']);
+        $router->put('update/{id}', [TaskController::class, 'updateTask']);
+        $router->delete('delete/{id}', [TaskController::class, 'deleteTask']);
+        $router->get('status/all', [TasksStatusesController::class, 'getAllTasksStatus']);
     });
 
 Route::get('/', function () {

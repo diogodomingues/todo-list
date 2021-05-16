@@ -3,7 +3,6 @@
 namespace App\Repositories;
 
 use App\Models\TodoList;
-use Carbon\Carbon;
 
 class TodoListRepository extends Repository
 {
@@ -36,6 +35,19 @@ class TodoListRepository extends Repository
     }
 
     /**
+     * Return single to-do list by it's ID
+     * 
+     * @param string $todoId
+     * 
+     * @return Collecmixedtion
+     */
+    public function getTodoListById(int $todoId)
+    {
+        return TodoList::where('id', '=', $todoId)
+            ->first();
+    }
+
+    /**
      * create new to-do Lists 
      * 
      * @param array $data
@@ -48,8 +60,6 @@ class TodoListRepository extends Repository
             'name' => $data['name'],
             'description' => $data['description'],
             'user_id' => $data['userId'],
-            'created_at' => Carbon::now()->toDateTimeString(),
-            'deleted_at' => Carbon::now()->toDateTimeString(),
         ]);
     }
 

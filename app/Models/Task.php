@@ -37,7 +37,7 @@ class Task extends Model
      */
     public function status()
     {
-        return $this->hasOne('App\Models\TasksStatuses', 'id', 'status_id');
+        return $this->hasOne('App\Models\TasksStatus', 'id', 'status_id');
     }
 
     /**
