@@ -17,7 +17,7 @@ use App\Http\Controllers\TasksStatusesController;
 */
 
 Route::prefix('todolist')
-    // ->middleware('auth')
+    ->middleware('auth')
     ->group(function ($router) {
         $router->get('/all', [TodoListController::class, 'getAllTodoLists']);
         $router->get('by-user', [TodoListController::class, 'getAllTodoListsByUser']);
@@ -26,7 +26,7 @@ Route::prefix('todolist')
     });
 
 Route::prefix('tasks')
-    // ->middleware('auth')
+    ->middleware('auth')
     ->group(function ($router) {
         $router->get('all', [TaskController::class, 'getAllTasks']);
         $router->get('by-todo-list', [TaskController::class, 'getAllTasksByTodoList']);

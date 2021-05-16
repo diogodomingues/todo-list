@@ -1981,6 +1981,21 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "home",
@@ -1988,40 +2003,18 @@ __webpack_require__.r(__webpack_exports__);
   components: {},
   data: function data() {
     return {
-      todoList: [{
-        name: "to-do list 1",
-        description: "work to-do list 1"
-      }, {
-        name: "to-do list 2",
-        description: "work to-do list 2"
-      }],
+      baseUrl: "http://127.0.0.1:8000",
+      todoList: [],
       showNewTodoList: false,
-      dialog: false,
-      todoTableHeaders: [{
-        text: "Name",
-        align: "start",
-        sortable: false,
-        value: "name"
-      }, {
-        text: "Description",
-        value: "description"
-      }, {
-        text: 'Action',
-        value: 'actions',
-        sortable: false
-      }]
+      dialog: false
     };
   },
   methods: {
     getTodoListByClient: function getTodoListByClient() {
       var that = this;
-      var temptoken = window.sessionStorage.getItem("usertoken");
       axios__WEBPACK_IMPORTED_MODULE_0___default()({
         method: "get",
-        url: themeConfig.apiurl + "/profile/countriesbyspaclient",
-        params: {
-          token: temptoken
-        }
+        url: this.baseUrl + "/todolist/all"
       }).then(function (res) {
         if (res.status == 200) {
           that.todoList = res.data;
@@ -2036,9 +2029,15 @@ __webpack_require__.r(__webpack_exports__);
     showNewTodoListPopup: function showNewTodoListPopup() {
       this.showNewTodoList = true;
       alert("Create new To-do List");
+    },
+    getTasksByTodoList: function getTasksByTodoList(item) {
+      alert("View Tasks");
+      console.log(item);
     }
   },
-  created: function created() {},
+  created: function created() {
+    this.getTodoListByClient();
+  },
   mounted: function mounted() {},
   computed: {},
   watch: {}
@@ -37867,45 +37866,38 @@ var render = function() {
               "div",
               { staticClass: "card-body" },
               [
-                _vm.todoList.length === 0
-                  ? _c(
-                      "v-container",
+                _c(
+                  "v-container",
+                  [
+                    _c(
+                      "v-row",
                       [
+                        _c("v-col"),
+                        _vm._v(" "),
+                        _c("v-spacer"),
+                        _vm._v(" "),
                         _c(
-                          "v-row",
+                          "v-col",
                           [
-                            _c("v-col"),
-                            _vm._v(" "),
-                            _c("v-spacer"),
-                            _vm._v(" "),
                             _c(
-                              "v-col",
+                              "v-card",
+                              {
+                                staticClass: "pa-2",
+                                attrs: { outlined: "", tile: "" }
+                              },
                               [
                                 _c(
-                                  "v-card",
+                                  "v-btn",
                                   {
-                                    staticClass: "pa-2",
-                                    attrs: { outlined: "", tile: "" }
+                                    staticClass: "ma-2",
+                                    attrs: { outlined: "", color: "indigo" },
+                                    on: { click: _vm.showNewTodoListPopup }
                                   },
                                   [
-                                    _c(
-                                      "v-btn",
-                                      {
-                                        staticClass: "ma-2",
-                                        attrs: {
-                                          outlined: "",
-                                          color: "indigo"
-                                        },
-                                        on: { click: _vm.showNewTodoListPopup }
-                                      },
-                                      [
-                                        _vm._v(
-                                          "\n                      New To-do List\n                    "
-                                        )
-                                      ]
+                                    _vm._v(
+                                      "\n                      New To-do List\n                    "
                                     )
-                                  ],
-                                  1
+                                  ]
                                 )
                               ],
                               1
@@ -37916,42 +37908,11 @@ var render = function() {
                       ],
                       1
                     )
-                  : _vm._e(),
+                  ],
+                  1
+                ),
                 _vm._v(" "),
                 _c("br"),
-                _c("br"),
-                _c("br"),
-                _vm._v(" "),
-                _c("v-data-table", {
-                  staticClass: "elevation-1",
-                  attrs: {
-                    headers: _vm.todoTableHeaders,
-                    items: _vm.todoList,
-                    "items-per-page": 10
-                  },
-                  scopedSlots: _vm._u([
-                    {
-                      key: "item.actions",
-                      fn: function(ref) {
-                        var item = ref.item
-                        return [
-                          _c(
-                            "v-btn",
-                            {
-                              staticClass: "ma-3",
-                              on: { click: _vm.showTasks }
-                            },
-                            [
-                              _vm._v(
-                                "\n                      View Tasks\n                    "
-                              )
-                            ]
-                          )
-                        ]
-                      }
-                    }
-                  ])
-                }),
                 _vm._v(" "),
                 _vm.showNewTodoList === true
                   ? _c(
@@ -37963,9 +37924,58 @@ var render = function() {
                         )
                       ]
                     )
-                  : _vm._e()
+                  : _vm._e(),
+                _vm._v(" "),
+                _vm._l(_vm.todoList, function(item, index) {
+                  return _c(
+                    "ul",
+                    [
+                      _c(
+                        "v-card",
+                        { attrs: { outlined: "", "max-width": "300" } },
+                        [
+                          _c("v-card-title", [_vm._v(_vm._s(item.name))]),
+                          _vm._v(" "),
+                          _c("v-card-text", [_vm._v(_vm._s(item.description))]),
+                          _vm._v(" "),
+                          _c(
+                            "v-card-actions",
+                            [
+                              _c(
+                                "v-btn",
+                                {
+                                  staticClass: "ma-2",
+                                  attrs: {
+                                    text: "",
+                                    outlined: "",
+                                    color: "indigo"
+                                  },
+                                  on: {
+                                    click: function($event) {
+                                      return _vm.getTasksByTodoList(item)
+                                    }
+                                  }
+                                },
+                                [
+                                  _vm._v(
+                                    "\n                    View Tasks\n                  "
+                                  )
+                                ]
+                              )
+                            ],
+                            1
+                          ),
+                          _vm._v(" "),
+                          _c("br")
+                        ],
+                        1
+                      )
+                    ],
+                    1
+                  )
+                })
               ],
-              1
+              2
             )
           ])
         ])

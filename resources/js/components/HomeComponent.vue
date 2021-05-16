@@ -7,7 +7,7 @@
             <div class="card-header">{{ "Home Page" }}</div>
 
             <div class="card-body">
-              <v-container v-if="todoList.length === 0">
+              <v-container>
                 <v-row>
                   <v-col> </v-col>
                   <v-spacer></v-spacer>
@@ -15,7 +15,6 @@
                   <v-col>
                     <v-card class="pa-2" outlined tile>
                       <v-btn
-                        
                         v-on:click="showNewTodoListPopup"
                         class="ma-2"
                         outlined
@@ -27,22 +26,19 @@
                   </v-col>
                 </v-row>
               </v-container>
-              <br /><br /><br />
-              <v-data-table
+              <br />
+              <!-- <v-data-table
                 :headers="todoTableHeaders"
                 :items="todoList"
                 :items-per-page="10"
                 class="elevation-1"
               >
                 <template v-slot:item.actions="{ item }">
-                  <v-btn
-                        class="ma-3"
-                        v-on:click="showTasks"                 
-                      >
-                        View Tasks
-                      </v-btn>
+                  <v-btn class="ma-3" v-on:click="showTasks">
+                    View Tasks
+                  </v-btn>
                 </template>
-              </v-data-table>
+              </v-data-table> -->
 
               <!-- <v-dialog v-model="dialog" width="500">
                 <template v-slot:activator="{ on, attrs }">
@@ -89,6 +85,25 @@
               >
                 I'm a success alert.
               </v-alert>
+
+              <ul v-for="(item, index) in todoList">
+                <v-card outlined max-width="300">
+                  <v-card-title>{{ item.name }}</v-card-title>
+                  <v-card-text>{{ item.description }}</v-card-text>
+                  <v-card-actions>
+                    <v-btn
+                      text
+                      @click="getTasksByTodoList(item)"
+                      class="ma-2"
+                      outlined
+                      color="indigo"
+                    >
+                      View Tasks
+                    </v-btn>
+                  </v-card-actions>
+                  <br />
+                </v-card>
+              </ul>
             </div>
           </div>
         </div>
@@ -107,42 +122,18 @@ export default {
   components: {},
   data: function () {
     return {
-      todoList: [
-        {
-          name: "to-do list 1",
-          description: "work to-do list 1",
-        },
-        {
-          name: "to-do list 2",
-          description: "work to-do list 2",
-        },
-      ],
+      baseUrl: "http://127.0.0.1:8000",
+      todoList: [],
       showNewTodoList: false,
       dialog: false,
-      todoTableHeaders: [
-        {
-          text: "Name",
-          align: "start",
-          sortable: false,
-          value: "name",
-        },
-        { text: "Description", value: "description" },
-        { text: 'Action', value: 'actions', sortable: false },
-      ],
     };
   },
   methods: {
     getTodoListByClient() {
       let that = this;
-
-      let temptoken = window.sessionStorage.getItem("usertoken");
-
       axios({
         method: "get",
-        url: themeConfig.apiurl + "/profile/countriesbyspaclient",
-        params: {
-          token: temptoken,
-        },
+        url: this.baseUrl + "/todolist/all",
       })
         .then(function (res) {
           if (res.status == 200) {
@@ -160,8 +151,14 @@ export default {
       this.showNewTodoList = true;
       alert("Create new To-do List");
     },
+    getTasksByTodoList(item) {
+      alert("View Tasks");
+      console.log(item);
+    },
   },
-  created() {},
+  created() {
+    this.getTodoListByClient();
+  },
 
   mounted() {},
 
