@@ -18,7 +18,7 @@ class CreateTodoListTable extends Migration
             $table->string('name')->comment('name of the todo list');
             $table->string('description')->comment('description of the todo list');;
 
-            $table->integer('user_id')->unsigned()->comment('owner of the todo list');;
+            $table->bigInteger('user_id')->unsigned()->comment('owner of the todo list');
             $table->foreign('user_id')->references('id')->on('users');
 
             $table->softDeletes();

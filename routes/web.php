@@ -2,6 +2,7 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TodoListController;
+use App\Http\Controllers\TaskController;
 
 /*
 |--------------------------------------------------------------------------
@@ -14,19 +15,14 @@ use App\Http\Controllers\TodoListController;
 |
 */
 
-// Route::prefix('todolist')
-//     ->middleware('auth')
-//     ->group(function ($router) {
-//         $router->get('all', 'TodoListController@getAllTodoLists');
-//         $router->get('by-user/{id}', 'TodoListController@getAllTodoListsByUser');
-//         $router->post('create', 'TodoListController@createTodoList');
-//         $router->delete('delete/{id}', 'TodoListController@deleteTodoList');
-//     });
-
-    Route::get('todolist/all', [TodoListController::class, 'getAllTodoLists']);
-    Route::get('todolist/by-user', [TodoListController::class, 'getAllTodoListsByUser']);
-    Route::post('todolist/create', [TodoListController::class, 'createTodoList']);
-    Route::delete('todolist/delete/{id}', [TodoListController::class, 'deleteTodoList']);
+Route::prefix('todolist')
+    ->middleware('auth')
+    ->group(function ($router) {
+        $router->get('/all', [TodoListController::class, 'getAllTodoLists']);
+        $router->get('by-user', [TodoListController::class, 'getAllTodoListsByUser']);
+        $router->post('create', [TodoListController::class, 'createTodoList']);
+        $router->delete('delete/{id}', [TodoListController::class, 'deleteTodoList']);
+    });
 
 Route::prefix('tasks')
     ->middleware('auth')
