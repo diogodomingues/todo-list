@@ -1,5 +1,6 @@
 @extends('layouts.app')
 
 @section('content')
-    <home-component></home-component>
+    <!-- pass as a prop the user details -->
+    <home-component userdetails="{{Auth::user()}}"></home-component>
 @endsection

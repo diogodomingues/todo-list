@@ -117,7 +117,7 @@ import axios from "axios";
 
 export default {
   name: "home",
-  props: [],
+  props: ['userdetails'],
 
   components: {},
   data: function () {
@@ -126,17 +126,22 @@ export default {
       todoList: [],
       showNewTodoList: false,
       dialog: false,
+      loggedUser :{}
     };
   },
   methods: {
-    getTodoListByClient() {
+    getTodoListByClient(userId) {
       let that = this;
       axios({
         method: "get",
-        url: this.baseUrl + "/todolist/all",
+        url: this.baseUrl + "/todolist/by-user",
+        params: {
+          userId : userId
+        }
       })
         .then(function (res) {
           if (res.status == 200) {
+            console.log(res.data);
             that.todoList = res.data;
           }
         })
@@ -157,7 +162,10 @@ export default {
     },
   },
   created() {
-    this.getTodoListByClient();
+    //decode json 
+    this.loggedUser = JSON.parse(this.userdetails);
+
+    this.getTodoListByClient(this.loggedUser.id);    
   },
 
   mounted() {},

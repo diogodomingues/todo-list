@@ -1999,24 +1999,29 @@ __webpack_require__.r(__webpack_exports__);
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "home",
-  props: [],
+  props: ['userdetails'],
   components: {},
   data: function data() {
     return {
       baseUrl: "http://127.0.0.1:8000",
       todoList: [],
       showNewTodoList: false,
-      dialog: false
+      dialog: false,
+      loggedUser: {}
     };
   },
   methods: {
-    getTodoListByClient: function getTodoListByClient() {
+    getTodoListByClient: function getTodoListByClient(userId) {
       var that = this;
       axios__WEBPACK_IMPORTED_MODULE_0___default()({
         method: "get",
-        url: this.baseUrl + "/todolist/all"
+        url: this.baseUrl + "/todolist/by-user",
+        params: {
+          userId: userId
+        }
       }).then(function (res) {
         if (res.status == 200) {
+          console.log(res.data);
           that.todoList = res.data;
         }
       })["catch"](function (err) {
@@ -2036,7 +2041,10 @@ __webpack_require__.r(__webpack_exports__);
     }
   },
   created: function created() {
-    this.getTodoListByClient();
+    //decode json 
+    this.loggedUser = JSON.parse(this.userdetails); // this.getTodoListByClient();
+
+    this.getTodoListByClient(this.loggedUser.id);
   },
   mounted: function mounted() {},
   computed: {},
