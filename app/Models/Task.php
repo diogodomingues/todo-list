@@ -20,6 +20,7 @@ class Task extends Model
         'todo_list_id',
         'status_id',
         'created_at',
+        'updated_at',
         'deleted_at'
     ];
 
@@ -29,7 +30,9 @@ class Task extends Model
      * @var array
      */
     protected $hidden = [
-        //
+        'created_at',
+        'updated_at',
+        'deleted_at'
     ];
 
     /**

@@ -2024,6 +2024,175 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "home",
@@ -2033,9 +2202,12 @@ __webpack_require__.r(__webpack_exports__);
     return {
       baseUrl: "http://127.0.0.1:8000",
       todoList: [],
+      tasksList: [],
       showSuccessMessage: false,
       dialog: false,
       deleteDialog: false,
+      deleteDialogTask: false,
+      createTaskDialog: false,
       loggedUser: {},
       valid: true,
       name: "",
@@ -2051,10 +2223,44 @@ __webpack_require__.r(__webpack_exports__);
         return v && v.length >= 10 || "Description must be at least 10 characters";
       }],
       sucessMessage: "",
-      deleteItem: {}
+      deleteItem: {},
+      showTodoListCard: false,
+      showTasksCard: false,
+      tableHeaders: [{
+        text: "Title",
+        value: "title"
+      }, {
+        text: "Description",
+        value: "description"
+      }, {
+        text: "Status",
+        value: "status.code"
+      }, {
+        text: "Actions",
+        value: "actions"
+      }],
+      selectedTodoList: {},
+      createTaskItem: {},
+      editTaskItem: {},
+      deleteTaskItem: {},
+      editDialog: false,
+      taskStatus: []
     };
   },
   methods: {
+    getTasksStatus: function getTasksStatus() {
+      var that = this;
+      axios__WEBPACK_IMPORTED_MODULE_0___default()({
+        method: "get",
+        url: this.baseUrl + "/tasks/status/all"
+      }).then(function (res) {
+        if (res.status == 200) {
+          that.taskStatus = res.data;
+        }
+      })["catch"](function (err) {
+        console.log(err);
+      });
+    },
     getTodoListByClient: function getTodoListByClient(userId) {
       var that = this;
       axios__WEBPACK_IMPORTED_MODULE_0___default()({
@@ -2100,7 +2306,7 @@ __webpack_require__.r(__webpack_exports__);
         method: "delete",
         url: this.baseUrl + "/todolist/delete/" + this.deleteItem.id
       }).then(function (res) {
-        if (res.status == 200 || res.status == 201) {
+        if (res.status == 200) {
           that.sucessMessage = "To-do List deleted.";
           that.showSuccessMessage = true; //close popup
 
@@ -2112,6 +2318,97 @@ __webpack_require__.r(__webpack_exports__);
         }
       })["catch"](function (error) {});
     },
+    getTasksByTodoList: function getTasksByTodoList(item) {
+      var that = this;
+      axios__WEBPACK_IMPORTED_MODULE_0___default()({
+        method: "get",
+        url: this.baseUrl + "/tasks/by-todo-list",
+        params: {
+          todoId: item.id
+        }
+      }).then(function (res) {
+        if (res.status == 200) {
+          that.tasksList = res.data;
+        }
+      })["catch"](function (err) {
+        console.log(err);
+      });
+    },
+    editTask: function editTask(item) {
+      //create a new object with the same properties but different reference
+      this.editTaskItem = JSON.parse(JSON.stringify(item)); // this.editTaskItem =  item;
+
+      this.editDialog = true;
+    },
+    updateTask: function updateTask() {
+      var that = this;
+      axios__WEBPACK_IMPORTED_MODULE_0___default()({
+        method: "put",
+        url: this.baseUrl + "/tasks/update/" + this.editTaskItem.id,
+        data: {
+          todoListId: this.editTaskItem.todo_list_id,
+          title: this.editTaskItem.title,
+          description: this.editTaskItem.description,
+          statusId: this.editTaskItem.status_id
+        }
+      }).then(function (res) {
+        if (res.status == 200) {
+          that.sucessMessage = "Tasks Updated";
+          that.showSuccessMessage = true;
+          that.editDialog = false; // that.updateTaskFromDisplay(that.editTaskItem); //not working
+        }
+      })["catch"](function (error) {
+        that.sucessMessage = error.response.data;
+        that.showSuccessMessage = true;
+      });
+    },
+    deleteTask: function deleteTask(item) {
+      this.deleteDialogTask = true;
+      this.deleteTaskItem = item;
+    },
+    removeTask: function removeTask() {
+      var that = this;
+      axios__WEBPACK_IMPORTED_MODULE_0___default()({
+        method: "delete",
+        url: this.baseUrl + "/tasks/delete/" + this.deleteTaskItem.id
+      }).then(function (res) {
+        if (res.status == 200) {
+          that.sucessMessage = "Task deleted.";
+          that.showSuccessMessage = true; //close popup
+
+          that.deleteDialogTask = false; //remove to-do list element from display
+
+          that.getTasksByTodoList(that.selectedTodoList); //need to be upgraded
+          //reset object
+
+          that.deleteTaskItem = {};
+        }
+      })["catch"](function (error) {});
+    },
+    showCreateNewTask: function showCreateNewTask() {
+      this.createTaskDialog = true;
+      this.createTaskItem = {};
+    },
+    createNewTask: function createNewTask() {
+      var that = this;
+      axios__WEBPACK_IMPORTED_MODULE_0___default()({
+        method: "post",
+        url: this.baseUrl + "/tasks/create",
+        data: {
+          todoListId: this.selectedTodoList.id,
+          title: this.createTaskItem.title,
+          description: this.createTaskItem.description
+        }
+      }).then(function (res) {
+        if (res.status == 200 || res.status == 201) {
+          that.sucessMessage = "New Task created.";
+          that.showSuccessMessage = true;
+          res.data.status_id = 1;
+          that.tasksList.push(res.data);
+          that.createTaskDialog = false;
+        }
+      })["catch"](function (error) {});
+    },
     showNewTodoListPopup: function showNewTodoListPopup() {
       //clear fields data
       this.name = "";
@@ -2119,10 +2416,10 @@ __webpack_require__.r(__webpack_exports__);
 
       this.dialog = true;
     },
-    getTasksByTodoList: function getTasksByTodoList(item) {
-      // alert("View Tasks");
-      console.log(item);
-      this.$router.push('tasks');
+    tasksByTodoList: function tasksByTodoList(item) {
+      this.selectedTodoList = item;
+      this.showTasksCard = true;
+      this.getTasksByTodoList(item);
     },
     removeTodoFromDisplay: function removeTodoFromDisplay(item) {
       //get index from item
@@ -2134,12 +2431,25 @@ __webpack_require__.r(__webpack_exports__);
         //remove deleted item from being displayed
         this.todoList.splice(index, 1);
       }
+    },
+    // removeTaskFromDisplay(){
+    // },
+    updateTaskFromDisplay: function updateTaskFromDisplay(item) {
+      var index = this.tasksList.findIndex(function (x) {
+        return x.id == item.id;
+      });
+
+      if (index > -1) {
+        //update task item
+        this.tasksList[index] = item;
+      }
     }
   },
   created: function created() {
     //decode json
     this.loggedUser = JSON.parse(this.userdetails);
     this.getTodoListByClient(this.loggedUser.id);
+    this.getTasksStatus();
   },
   mounted: function mounted() {},
   computed: {},
@@ -38118,10 +38428,13 @@ var render = function() {
                                 }
                               },
                               [
-                                _vm._v(
-                                  "\n                    Save\n                  "
+                                _c(
+                                  "v-icon",
+                                  { attrs: { dark: "", right: "" } },
+                                  [_vm._v(" mdi-check ")]
                                 )
-                              ]
+                              ],
+                              1
                             ),
                             _vm._v(" "),
                             _c(
@@ -38135,10 +38448,307 @@ var render = function() {
                                 }
                               },
                               [
-                                _vm._v(
-                                  "\n                    Cancel\n                  "
+                                _c(
+                                  "v-icon",
+                                  { attrs: { dark: "", right: "" } },
+                                  [_vm._v(" mdi-close ")]
                                 )
-                              ]
+                              ],
+                              1
+                            )
+                          ],
+                          1
+                        )
+                      ],
+                      1
+                    )
+                  ],
+                  1
+                ),
+                _vm._v(" "),
+                _c(
+                  "v-dialog",
+                  {
+                    attrs: { "max-width": "500" },
+                    model: {
+                      value: _vm.editDialog,
+                      callback: function($$v) {
+                        _vm.editDialog = $$v
+                      },
+                      expression: "editDialog"
+                    }
+                  },
+                  [
+                    _c(
+                      "v-card",
+                      [
+                        _c(
+                          "v-card-title",
+                          { staticClass: "headline grey lighten-2" },
+                          [
+                            _vm._v(
+                              "\n                  Edit Task\n                "
+                            )
+                          ]
+                        ),
+                        _vm._v(" "),
+                        _c(
+                          "v-card-text",
+                          [
+                            _c(
+                              "v-form",
+                              {
+                                ref: "form",
+                                attrs: { "lazy-validation": "" },
+                                model: {
+                                  value: _vm.valid,
+                                  callback: function($$v) {
+                                    _vm.valid = $$v
+                                  },
+                                  expression: "valid"
+                                }
+                              },
+                              [
+                                _c("v-text-field", {
+                                  attrs: {
+                                    rules: _vm.nameRules,
+                                    label: "title",
+                                    required: ""
+                                  },
+                                  model: {
+                                    value: _vm.editTaskItem.title,
+                                    callback: function($$v) {
+                                      _vm.$set(_vm.editTaskItem, "title", $$v)
+                                    },
+                                    expression: "editTaskItem.title"
+                                  }
+                                }),
+                                _vm._v(" "),
+                                _c("v-text-field", {
+                                  attrs: {
+                                    rules: _vm.descriptionRules,
+                                    label: "Description",
+                                    required: ""
+                                  },
+                                  model: {
+                                    value: _vm.editTaskItem.description,
+                                    callback: function($$v) {
+                                      _vm.$set(
+                                        _vm.editTaskItem,
+                                        "description",
+                                        $$v
+                                      )
+                                    },
+                                    expression: "editTaskItem.description"
+                                  }
+                                }),
+                                _vm._v(" "),
+                                _c("v-select", {
+                                  attrs: {
+                                    "item-text": "code",
+                                    "item-value": "id",
+                                    items: _vm.taskStatus,
+                                    label: "Status"
+                                  },
+                                  model: {
+                                    value: _vm.editTaskItem.status_id,
+                                    callback: function($$v) {
+                                      _vm.$set(
+                                        _vm.editTaskItem,
+                                        "status_id",
+                                        $$v
+                                      )
+                                    },
+                                    expression: "editTaskItem.status_id"
+                                  }
+                                })
+                              ],
+                              1
+                            )
+                          ],
+                          1
+                        ),
+                        _vm._v(" "),
+                        _c(
+                          "v-card-actions",
+                          [
+                            _c("v-spacer"),
+                            _vm._v(" "),
+                            _c(
+                              "v-btn",
+                              {
+                                attrs: { color: "primary", text: "" },
+                                on: {
+                                  click: function($event) {
+                                    return _vm.updateTask()
+                                  }
+                                }
+                              },
+                              [
+                                _c(
+                                  "v-icon",
+                                  { attrs: { dark: "", right: "" } },
+                                  [_vm._v(" mdi-check ")]
+                                )
+                              ],
+                              1
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "v-btn",
+                              {
+                                attrs: { color: "primary", text: "" },
+                                on: {
+                                  click: function($event) {
+                                    _vm.editDialog = false
+                                  }
+                                }
+                              },
+                              [
+                                _c(
+                                  "v-icon",
+                                  { attrs: { dark: "", right: "" } },
+                                  [_vm._v(" mdi-close ")]
+                                )
+                              ],
+                              1
+                            )
+                          ],
+                          1
+                        )
+                      ],
+                      1
+                    )
+                  ],
+                  1
+                ),
+                _vm._v(" "),
+                _c(
+                  "v-dialog",
+                  {
+                    attrs: { "max-width": "500" },
+                    model: {
+                      value: _vm.createTaskDialog,
+                      callback: function($$v) {
+                        _vm.createTaskDialog = $$v
+                      },
+                      expression: "createTaskDialog"
+                    }
+                  },
+                  [
+                    _c(
+                      "v-card",
+                      [
+                        _c(
+                          "v-card-title",
+                          { staticClass: "headline grey lighten-2" },
+                          [
+                            _vm._v(
+                              "\n                  Create Task\n                "
+                            )
+                          ]
+                        ),
+                        _vm._v(" "),
+                        _c(
+                          "v-card-text",
+                          [
+                            _c(
+                              "v-form",
+                              {
+                                ref: "form",
+                                attrs: { "lazy-validation": "" },
+                                model: {
+                                  value: _vm.valid,
+                                  callback: function($$v) {
+                                    _vm.valid = $$v
+                                  },
+                                  expression: "valid"
+                                }
+                              },
+                              [
+                                _c("v-text-field", {
+                                  attrs: {
+                                    rules: _vm.nameRules,
+                                    label: "Title",
+                                    required: ""
+                                  },
+                                  model: {
+                                    value: _vm.createTaskItem.title,
+                                    callback: function($$v) {
+                                      _vm.$set(_vm.createTaskItem, "title", $$v)
+                                    },
+                                    expression: "createTaskItem.title"
+                                  }
+                                }),
+                                _vm._v(" "),
+                                _c("v-text-field", {
+                                  attrs: {
+                                    rules: _vm.descriptionRules,
+                                    label: "Description",
+                                    required: ""
+                                  },
+                                  model: {
+                                    value: _vm.createTaskItem.description,
+                                    callback: function($$v) {
+                                      _vm.$set(
+                                        _vm.createTaskItem,
+                                        "description",
+                                        $$v
+                                      )
+                                    },
+                                    expression: "createTaskItem.description"
+                                  }
+                                })
+                              ],
+                              1
+                            )
+                          ],
+                          1
+                        ),
+                        _vm._v(" "),
+                        _c(
+                          "v-card-actions",
+                          [
+                            _c("v-spacer"),
+                            _vm._v(" "),
+                            _c(
+                              "v-btn",
+                              {
+                                attrs: { color: "primary", text: "" },
+                                on: {
+                                  click: function($event) {
+                                    return _vm.createNewTask()
+                                  }
+                                }
+                              },
+                              [
+                                _c(
+                                  "v-icon",
+                                  { attrs: { dark: "", right: "" } },
+                                  [_vm._v(" mdi-check ")]
+                                )
+                              ],
+                              1
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "v-btn",
+                              {
+                                attrs: { color: "primary", text: "" },
+                                on: {
+                                  click: function($event) {
+                                    _vm.createTaskDialog = false
+                                  }
+                                }
+                              },
+                              [
+                                _c(
+                                  "v-icon",
+                                  { attrs: { dark: "", right: "" } },
+                                  [_vm._v(" mdi-close ")]
+                                )
+                              ],
+                              1
                             )
                           ],
                           1
@@ -38249,6 +38859,95 @@ var render = function() {
                 ),
                 _vm._v(" "),
                 _c(
+                  "v-dialog",
+                  {
+                    attrs: { "max-width": "400" },
+                    model: {
+                      value: _vm.deleteDialogTask,
+                      callback: function($$v) {
+                        _vm.deleteDialogTask = $$v
+                      },
+                      expression: "deleteDialogTask"
+                    }
+                  },
+                  [
+                    _c(
+                      "v-card",
+                      [
+                        _c(
+                          "v-card-title",
+                          { staticClass: "headline grey lighten-2" },
+                          [
+                            _vm._v(
+                              "\n                  Delete Task\n                "
+                            )
+                          ]
+                        ),
+                        _vm._v(" "),
+                        _c("v-card-text", [
+                          _c("p", [
+                            _vm._v(
+                              "Do you want to delete Task " +
+                                _vm._s(_vm.deleteTaskItem.title)
+                            )
+                          ])
+                        ]),
+                        _vm._v(" "),
+                        _c(
+                          "v-card-actions",
+                          [
+                            _c("v-spacer"),
+                            _vm._v(" "),
+                            _c(
+                              "v-btn",
+                              {
+                                attrs: { color: "primary", text: "" },
+                                on: {
+                                  click: function($event) {
+                                    return _vm.removeTask()
+                                  }
+                                }
+                              },
+                              [
+                                _c(
+                                  "v-icon",
+                                  { attrs: { dark: "", right: "" } },
+                                  [_vm._v(" mdi-check ")]
+                                )
+                              ],
+                              1
+                            ),
+                            _vm._v(" "),
+                            _c(
+                              "v-btn",
+                              {
+                                attrs: { color: "primary", text: "" },
+                                on: {
+                                  click: function($event) {
+                                    _vm.deleteDialogTask = false
+                                  }
+                                }
+                              },
+                              [
+                                _c(
+                                  "v-icon",
+                                  { attrs: { dark: "", right: "" } },
+                                  [_vm._v(" mdi-close ")]
+                                )
+                              ],
+                              1
+                            )
+                          ],
+                          1
+                        )
+                      ],
+                      1
+                    )
+                  ],
+                  1
+                ),
+                _vm._v(" "),
+                _c(
                   "v-snackbar",
                   {
                     attrs: {
@@ -38278,86 +38977,285 @@ var render = function() {
                   1
                 ),
                 _vm._v(" "),
-                _vm._l(_vm.todoList, function(item, index) {
-                  return _c(
-                    "ul",
-                    [
-                      _c(
-                        "v-card",
-                        { attrs: { outlined: "", "max-width": "300" } },
-                        [
-                          _c("v-card-title", [_vm._v(_vm._s(item.name))]),
-                          _vm._v(" "),
-                          _c("v-card-text", [_vm._v(_vm._s(item.description))]),
-                          _vm._v(" "),
-                          _c(
-                            "v-card-actions",
-                            [
-                              _c(
-                                "v-btn",
-                                {
-                                  staticClass: "ma-2",
-                                  attrs: {
-                                    text: "",
-                                    outlined: "",
-                                    color: "indigo"
-                                  },
-                                  on: {
-                                    click: function($event) {
-                                      return _vm.getTasksByTodoList(item)
+                _c(
+                  "v-row",
+                  { attrs: { "no-gutters": "" } },
+                  _vm._l(_vm.todoList, function(item, index) {
+                    return _c(
+                      "ul",
+                      [
+                        _c(
+                          "v-col",
+                          { attrs: { "align-self": "center" } },
+                          [
+                            _c(
+                              "v-card",
+                              { attrs: { outlined: "", width: "200" } },
+                              [
+                                _c("v-card-title", [_vm._v(_vm._s(item.name))]),
+                                _vm._v(" "),
+                                _c("v-card-text", [
+                                  _vm._v(_vm._s(item.description))
+                                ]),
+                                _vm._v(" "),
+                                _c(
+                                  "v-card-actions",
+                                  [
+                                    _c(
+                                      "v-btn",
+                                      {
+                                        staticClass: "ma-2",
+                                        attrs: {
+                                          bottom: "",
+                                          outlined: "",
+                                          color: "indigo",
+                                          small: ""
+                                        },
+                                        on: {
+                                          click: function($event) {
+                                            return _vm.tasksByTodoList(item)
+                                          }
+                                        }
+                                      },
+                                      [
+                                        _c("v-icon", { attrs: { dark: "" } }, [
+                                          _vm._v(
+                                            "\n                          mdi-format-list-bulleted-square\n                        "
+                                          )
+                                        ])
+                                      ],
+                                      1
+                                    ),
+                                    _vm._v(" "),
+                                    _c("v-spacer"),
+                                    _vm._v(" "),
+                                    _c(
+                                      "v-btn",
+                                      {
+                                        staticClass: "ma-2",
+                                        attrs: {
+                                          text: "",
+                                          outlined: "",
+                                          color: "indigo",
+                                          small: "",
+                                          fab: ""
+                                        },
+                                        on: {
+                                          click: function($event) {
+                                            return _vm.deleteTodoList(item)
+                                          }
+                                        }
+                                      },
+                                      [
+                                        _c("v-icon", { attrs: { dark: "" } }, [
+                                          _vm._v(" mdi-delete ")
+                                        ])
+                                      ],
+                                      1
+                                    )
+                                  ],
+                                  1
+                                ),
+                                _vm._v(" "),
+                                _c("br")
+                              ],
+                              1
+                            )
+                          ],
+                          1
+                        )
+                      ],
+                      1
+                    )
+                  }),
+                  0
+                ),
+                _vm._v(" "),
+                _c(
+                  "v-row",
+                  { attrs: { "no-gutters": "" } },
+                  [
+                    _c(
+                      "v-col",
+                      { attrs: { "align-self": "center" } },
+                      [
+                        _c(
+                          "v-card",
+                          { attrs: { "max-width": "600" } },
+                          [
+                            _c("v-card-title", [_vm._v(" Tasks ")]),
+                            _vm._v(" "),
+                            _c("v-card-subtitle", [
+                              _vm._v(
+                                "\n                    To-do List " +
+                                  _vm._s(_vm.selectedTodoList.name)
+                              )
+                            ]),
+                            _vm._v(" "),
+                            _c(
+                              "v-card-actions",
+                              [
+                                _c("v-spacer"),
+                                _vm._v(" "),
+                                _c(
+                                  "v-btn",
+                                  {
+                                    attrs: { icon: "" },
+                                    on: {
+                                      click: function($event) {
+                                        _vm.showTasksCard = !_vm.showTasksCard
+                                      }
                                     }
-                                  }
+                                  },
+                                  [
+                                    _c("v-icon", [
+                                      _vm._v(
+                                        _vm._s(
+                                          _vm.showTasksCard
+                                            ? "mdi-chevron-up"
+                                            : "mdi-chevron-down"
+                                        )
+                                      )
+                                    ])
+                                  ],
+                                  1
+                                )
+                              ],
+                              1
+                            ),
+                            _vm._v(" "),
+                            _c("v-expand-transition", [
+                              _c(
+                                "div",
+                                {
+                                  directives: [
+                                    {
+                                      name: "show",
+                                      rawName: "v-show",
+                                      value: _vm.showTasksCard,
+                                      expression: "showTasksCard"
+                                    }
+                                  ]
                                 },
                                 [
-                                  _c("v-icon", { attrs: { dark: "" } }, [
-                                    _vm._v(" mdi-pencil ")
-                                  ]),
-                                  _vm._v(
-                                    "\n                    Tasks\n                  "
+                                  _c("v-divider"),
+                                  _vm._v(" "),
+                                  _c(
+                                    "v-card-text",
+                                    [
+                                      _c("v-data-table", {
+                                        attrs: {
+                                          headers: _vm.tableHeaders,
+                                          items: _vm.tasksList
+                                        },
+                                        scopedSlots: _vm._u([
+                                          {
+                                            key: "top",
+                                            fn: function() {
+                                              return [
+                                                _c(
+                                                  "v-toolbar",
+                                                  { attrs: { flat: "" } },
+                                                  [
+                                                    _c("v-toolbar-title"),
+                                                    _vm._v(" "),
+                                                    _c("v-spacer"),
+                                                    _vm._v(" "),
+                                                    _c(
+                                                      "v-btn",
+                                                      {
+                                                        staticClass: "mb-2",
+                                                        attrs: {
+                                                          color: "primary",
+                                                          dark: ""
+                                                        },
+                                                        on: {
+                                                          click: function(
+                                                            $event
+                                                          ) {
+                                                            return _vm.showCreateNewTask()
+                                                          }
+                                                        }
+                                                      },
+                                                      [
+                                                        _vm._v(
+                                                          "\n                                New Task\n                              "
+                                                        )
+                                                      ]
+                                                    )
+                                                  ],
+                                                  1
+                                                )
+                                              ]
+                                            },
+                                            proxy: true
+                                          },
+                                          {
+                                            key: "item.actions",
+                                            fn: function(ref) {
+                                              var item = ref.item
+                                              return [
+                                                _c(
+                                                  "v-icon",
+                                                  {
+                                                    staticClass: "mr-2",
+                                                    attrs: { small: "" },
+                                                    on: {
+                                                      click: function($event) {
+                                                        return _vm.editTask(
+                                                          item
+                                                        )
+                                                      }
+                                                    }
+                                                  },
+                                                  [
+                                                    _vm._v(
+                                                      "\n                              mdi-pencil\n                            "
+                                                    )
+                                                  ]
+                                                ),
+                                                _vm._v(" "),
+                                                _c(
+                                                  "v-icon",
+                                                  {
+                                                    attrs: { small: "" },
+                                                    on: {
+                                                      click: function($event) {
+                                                        return _vm.deleteTask(
+                                                          item
+                                                        )
+                                                      }
+                                                    }
+                                                  },
+                                                  [
+                                                    _vm._v(
+                                                      "\n                              mdi-delete\n                            "
+                                                    )
+                                                  ]
+                                                )
+                                              ]
+                                            }
+                                          }
+                                        ])
+                                      })
+                                    ],
+                                    1
                                   )
                                 ],
                                 1
-                              ),
-                              _vm._v(" "),
-                              _c("v-spacer"),
-                              _vm._v(" "),
-                              _c(
-                                "v-btn",
-                                {
-                                  staticClass: "ma-2",
-                                  attrs: {
-                                    text: "",
-                                    outlined: "",
-                                    color: "indigo",
-                                    small: ""
-                                  },
-                                  on: {
-                                    click: function($event) {
-                                      return _vm.deleteTodoList(item)
-                                    }
-                                  }
-                                },
-                                [
-                                  _c("v-icon", { attrs: { dark: "" } }, [
-                                    _vm._v(" mdi-delete ")
-                                  ])
-                                ],
-                                1
                               )
-                            ],
-                            1
-                          ),
-                          _vm._v(" "),
-                          _c("br")
-                        ],
-                        1
-                      )
-                    ],
-                    1
-                  )
-                })
+                            ])
+                          ],
+                          1
+                        )
+                      ],
+                      1
+                    )
+                  ],
+                  1
+                )
               ],
-              2
+              1
             )
           ])
         ])
