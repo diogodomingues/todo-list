@@ -204,9 +204,9 @@
                 {{ sucessMessage }}
               </v-snackbar>
 
-              <v-row no-gutters>
+              <v-row no-gutters align="center"> 
                 <ul v-for="(item, index) in todoList">
-                  <v-col align-self="center">
+                  <v-col align-self="center" align="center">
                     <v-card outlined width="200">
                       <v-card-title>{{ item.name }}</v-card-title>
                       <v-card-text>{{ item.description }}</v-card-text>
@@ -239,7 +239,6 @@
                       <br />
                     </v-card>
                   </v-col>
-                  <!-- <v-spacer></v-spacer> -->
                 </ul>
               </v-row>
 
@@ -488,7 +487,7 @@ export default {
             that.sucessMessage = "Tasks Updated";
             that.showSuccessMessage = true;
             that.editDialog = false;
-            // that.updateTaskFromDisplay(that.editTaskItem); //not working
+            that.getTasksByTodoList(that.selectedTodoList);
           }
         })
         .catch(function (error) {
@@ -515,7 +514,7 @@ export default {
             //close popup
             that.deleteDialogTask = false;
             //remove to-do list element from display
-            that.getTasksByTodoList(that.selectedTodoList); //need to be upgraded
+            that.getTasksByTodoList(that.selectedTodoList);
             //reset object
             that.deleteTaskItem = {};
           }
@@ -573,10 +572,6 @@ export default {
       }
     },
 
-    // removeTaskFromDisplay(){
-
-    // },
-
     updateTaskFromDisplay(item) {
       let index = this.tasksList.findIndex((x) => x.id == item.id);
       if (index > -1) {
@@ -598,7 +593,8 @@ export default {
 
   computed: {},
 
-  watch: {},
+  watch: {
+  },
 };
 </script>
 

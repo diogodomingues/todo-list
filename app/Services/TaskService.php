@@ -65,7 +65,11 @@ class TaskService extends Service
 
         if (!empty($todoList) && !empty($status)) {
             $data['statusId'] = $status->id;
-            return $this->repository->createTask($data);
+
+            $task = $this->repository->createTask($data);
+            $task->status = $this->taskStatusService->getTasksStatusById($task->status_id);
+
+            return $task;
         }
 
         return self::TASK_ERROR;

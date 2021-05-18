@@ -2191,7 +2191,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "home",
@@ -2359,6 +2358,8 @@ __webpack_require__.r(__webpack_exports__);
           that.sucessMessage = "Tasks Updated";
           that.showSuccessMessage = true;
           that.editDialog = false; // that.updateTaskFromDisplay(that.editTaskItem); //not working
+
+          that.getTasksByTodoList(that.selectedTodoList); //need to be upgraded
         }
       })["catch"](function (error) {
         that.sucessMessage = error.response.data;
@@ -2434,8 +2435,6 @@ __webpack_require__.r(__webpack_exports__);
         this.todoList.splice(index, 1);
       }
     },
-    // removeTaskFromDisplay(){
-    // },
     updateTaskFromDisplay: function updateTaskFromDisplay(item) {
       var index = this.tasksList.findIndex(function (x) {
         return x.id == item.id;
@@ -38974,14 +38973,16 @@ var render = function() {
                 _vm._v(" "),
                 _c(
                   "v-row",
-                  { attrs: { "no-gutters": "" } },
+                  { attrs: { "no-gutters": "", align: "center" } },
                   _vm._l(_vm.todoList, function(item, index) {
                     return _c(
                       "ul",
                       [
                         _c(
                           "v-col",
-                          { attrs: { "align-self": "center" } },
+                          {
+                            attrs: { "align-self": "center", align: "center" }
+                          },
                           [
                             _c(
                               "v-card",
