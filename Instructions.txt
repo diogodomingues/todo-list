@@ -1,0 +1,12 @@
+Instructions to use:
+
+1   download project from git Hub
+2   install npm on current machine
+3   inside project root location, run command: npm install
+4   create database with charset "utf8mb4" and collation "utf8mb4_unicode_ci"
+5   configure .env file with connection settings to DB (DB_DATABASE,DB_USERNAME,DB_PASSWORD)
+6   run laravel migrations with command: php artisan migrate
+7   run laravel seeder with command: php artisan db:seed
+8   run laravel project with command: php artisan serve
+
+Should work :)
