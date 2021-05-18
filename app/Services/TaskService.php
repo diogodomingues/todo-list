@@ -106,16 +106,20 @@ class TaskService extends Service
      */
     public function validateStatus($currentStatus, $newStatus)
     {
-        $default = true;
+        $result = true;
+        $developmentStatus = $this->taskStatusService->getTasksStatusByCode('In Development');
+        $developmentStatus = $developmentStatus->id;
+
         /**
          * new status should always be different and higer than the previous, meaning the task is
          * running on the flow for the next stage and cannot get back
+         * Allow tasks that are completed to be In Development again
          */
-        if ($newStatus < $currentStatus) {
-            $default = false;
+        if ($newStatus < $currentStatus && $newStatus !== $developmentStatus) {
+            $result = false;
         }
 
-        return $default;
+        return $result;
     }
 
     /**
@@ -126,4 +130,11 @@ class TaskService extends Service
         return $this->repository->deleteTask($taskId);
     } 
     
+    /**
+     * delete tasks by to-do list ID
+     */
+    public function deleteTaskByTodoListId(int $taskId)
+    {
+        return $this->repository->deleteTaskByTodoListId($taskId);
+    } 
 }

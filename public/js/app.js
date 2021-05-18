@@ -2310,7 +2310,9 @@ __webpack_require__.r(__webpack_exports__);
           that.sucessMessage = "To-do List deleted.";
           that.showSuccessMessage = true; //close popup
 
-          that.deleteDialog = false; //remove to-do list element from display
+          that.deleteDialog = false;
+          that.showTasksCard = false;
+          that.tasksList = []; //remove to-do list element from display
 
           that.removeTodoFromDisplay(that.deleteItem); //reset object
 
@@ -2403,7 +2405,6 @@ __webpack_require__.r(__webpack_exports__);
         if (res.status == 200 || res.status == 201) {
           that.sucessMessage = "New Task created.";
           that.showSuccessMessage = true;
-          res.data.status_id = 1;
           that.tasksList.push(res.data);
           that.createTaskDialog = false;
         }

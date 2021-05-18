@@ -433,6 +433,10 @@ export default {
             that.showSuccessMessage = true;
             //close popup
             that.deleteDialog = false;
+            //close datatable view
+            that.showTasksCard = false;
+            //clear tasks from datatable
+            that.tasksList = [];
             //remove to-do list element from display
             that.removeTodoFromDisplay(that.deleteItem);
             //reset object

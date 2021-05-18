@@ -37,7 +37,7 @@ class TaskRepository extends Repository
     {
         return Task::whereHas('todoList', function ($query) use ($userId) {
             $query->where('id', '=', $userId);
-        })->with('status','todoList')->get();
+        })->with('status', 'todoList')->get();
     }
 
     /**
@@ -50,7 +50,7 @@ class TaskRepository extends Repository
     public function getTasksById(int $taskId): Task
     {
         return Task::where('id', '=', $taskId)
-            ->with('status','todoList')
+            ->with('status', 'todoList')
             ->first();
     }
 
@@ -102,5 +102,17 @@ class TaskRepository extends Repository
         return Task::where('id', '=', $taskId)
             ->delete();
     }
-    
+
+    /**
+     * delete tasks by to-do list ID
+     * 
+     * @param int $todoId
+     * 
+     * @return bool
+     */
+    public function deleteTaskByTodoListId(int $todoId)
+    {
+        return Task::where('todo_list_id', '=', $todoId)
+            ->delete();
+    }
 }

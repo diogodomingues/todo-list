@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Repositories\TodoListRepository;
 use App\Services\UserService;
+use App\Services\TaskService;
 
 class TodoListService extends Service
 {   
@@ -14,8 +15,13 @@ class TodoListService extends Service
      */
     protected $userService;
 
-    public function __construct(TodoListRepository $repository, UserService $userService)
-    {
+    /**
+     * Constructor
+     */
+    public function __construct(
+        TodoListRepository $repository,
+        UserService $userService
+    ) {
         $this->repository = $repository;
         $this->userService = $userService;
     }
@@ -69,6 +75,12 @@ class TodoListService extends Service
      */
     public function deleteTodoList(int $todoId)
     {
+        //instantiate class with dependency injection outside of constructor
+        $taskService = app(TaskService::class);
+
+        //delete tasks associated to the to-do List
+        $taskService->deleteTaskByTodoListId($todoId);
+
         return $this->repository->deleteTodoList($todoId);
     }    
 }
