@@ -2357,9 +2357,8 @@ __webpack_require__.r(__webpack_exports__);
         if (res.status == 200) {
           that.sucessMessage = "Tasks Updated";
           that.showSuccessMessage = true;
-          that.editDialog = false; // that.updateTaskFromDisplay(that.editTaskItem); //not working
-
-          that.getTasksByTodoList(that.selectedTodoList); //need to be upgraded
+          that.editDialog = false;
+          that.getTasksByTodoList(that.selectedTodoList);
         }
       })["catch"](function (error) {
         that.sucessMessage = error.response.data;
@@ -2382,8 +2381,7 @@ __webpack_require__.r(__webpack_exports__);
 
           that.deleteDialogTask = false; //remove to-do list element from display
 
-          that.getTasksByTodoList(that.selectedTodoList); //need to be upgraded
-          //reset object
+          that.getTasksByTodoList(that.selectedTodoList); //reset object
 
           that.deleteTaskItem = {};
         }
@@ -38273,7 +38271,7 @@ var render = function() {
         _c("div", { staticClass: "col-md-8" }, [
           _c("div", { staticClass: "card" }, [
             _c("div", { staticClass: "card-header" }, [
-              _vm._v(_vm._s("Home Page"))
+              _vm._v(_vm._s("Manage To-do Lists and Tasks"))
             ]),
             _vm._v(" "),
             _c(
@@ -38963,7 +38961,7 @@ var render = function() {
                       _vm._v(" mdi-check-outline")
                     ]),
                     _vm._v(
-                      "\n              " +
+                      "\n                " +
                         _vm._s(_vm.sucessMessage) +
                         "\n            "
                     )
@@ -39073,20 +39071,24 @@ var render = function() {
                   [
                     _c(
                       "v-col",
-                      { attrs: { "align-self": "center" } },
+                      { attrs: { align: "center" } },
                       [
                         _c(
                           "v-card",
-                          { attrs: { "max-width": "600" } },
+                          {},
                           [
                             _c("v-card-title", [_vm._v(" Tasks ")]),
                             _vm._v(" "),
-                            _c("v-card-subtitle", [
-                              _vm._v(
-                                "\n                    To-do List " +
-                                  _vm._s(_vm.selectedTodoList.name)
-                              )
-                            ]),
+                            _c(
+                              "v-card-subtitle",
+                              { attrs: { align: "start" } },
+                              [
+                                _vm._v(
+                                  "\n                    To-do List " +
+                                    _vm._s(_vm.selectedTodoList.name)
+                                )
+                              ]
+                            ),
                             _vm._v(" "),
                             _c(
                               "v-card-actions",

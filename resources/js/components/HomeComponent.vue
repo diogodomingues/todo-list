@@ -4,7 +4,7 @@
       <div class="row justify-content-center">
         <div class="col-md-8">
           <div class="card">
-            <div class="card-header">{{ "Home Page" }}</div>
+            <div class="card-header">{{ "Manage To-do Lists and Tasks" }}</div>
 
             <div class="card-body">
               <v-container>
@@ -201,10 +201,10 @@
                 :timeout="2000"
               >
                 <v-icon dark> mdi-check-outline</v-icon>
-                {{ sucessMessage }}
+                &nbsp; {{ sucessMessage }}
               </v-snackbar>
 
-              <v-row no-gutters align="center"> 
+              <v-row no-gutters align="center">
                 <ul v-for="(item, index) in todoList">
                   <v-col align-self="center" align="center">
                     <v-card outlined width="200">
@@ -243,10 +243,10 @@
               </v-row>
 
               <v-row no-gutters>
-                <v-col align-self="center">
-                  <v-card class="" max-width="600">
+                <v-col align="center">
+                  <v-card class="" >
                     <v-card-title> Tasks </v-card-title>
-                    <v-card-subtitle>
+                    <v-card-subtitle align="start">
                       To-do List {{ selectedTodoList.name }}</v-card-subtitle
                     >
                     <v-card-actions>
