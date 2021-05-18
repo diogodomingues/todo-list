@@ -11,18 +11,17 @@
                 <v-row>
                   <v-col> </v-col>
                   <v-spacer></v-spacer>
-                  <v-col>
-                    <v-card class="pa-2" outlined tile>
-                      <v-btn
-                        v-on:click="showNewTodoListPopup"
-                        class="ma-2"
-                        outlined
-                        color="indigo"
-                      >
-                        <v-icon dark right> mdi-plus </v-icon>
-                        To-do List
-                      </v-btn>
-                    </v-card>
+                  <v-col align="end">
+                    <v-spacer></v-spacer>
+                    <v-btn
+                      v-on:click="showNewTodoListPopup"
+                      class="ma-2"
+                      outlined
+                      color="indigo"
+                    >
+                      <v-icon dark right> mdi-plus </v-icon>
+                      &nbsp; To-do List
+                    </v-btn>
                   </v-col>
                 </v-row>
               </v-container>

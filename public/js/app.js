@@ -2192,7 +2192,6 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
-//
 
 /* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
   name: "home",
@@ -2310,8 +2309,10 @@ __webpack_require__.r(__webpack_exports__);
           that.sucessMessage = "To-do List deleted.";
           that.showSuccessMessage = true; //close popup
 
-          that.deleteDialog = false;
-          that.showTasksCard = false;
+          that.deleteDialog = false; //close datatable view
+
+          that.showTasksCard = false; //clear tasks from datatable
+
           that.tasksList = []; //remove to-do list element from display
 
           that.removeTodoFromDisplay(that.deleteItem); //reset object
@@ -38292,32 +38293,25 @@ var render = function() {
                         _vm._v(" "),
                         _c(
                           "v-col",
+                          { attrs: { align: "end" } },
                           [
+                            _c("v-spacer"),
+                            _vm._v(" "),
                             _c(
-                              "v-card",
+                              "v-btn",
                               {
-                                staticClass: "pa-2",
-                                attrs: { outlined: "", tile: "" }
+                                staticClass: "ma-2",
+                                attrs: { outlined: "", color: "indigo" },
+                                on: { click: _vm.showNewTodoListPopup }
                               },
                               [
                                 _c(
-                                  "v-btn",
-                                  {
-                                    staticClass: "ma-2",
-                                    attrs: { outlined: "", color: "indigo" },
-                                    on: { click: _vm.showNewTodoListPopup }
-                                  },
-                                  [
-                                    _c(
-                                      "v-icon",
-                                      { attrs: { dark: "", right: "" } },
-                                      [_vm._v(" mdi-plus ")]
-                                    ),
-                                    _vm._v(
-                                      "\n                      To-do List\n                    "
-                                    )
-                                  ],
-                                  1
+                                  "v-icon",
+                                  { attrs: { dark: "", right: "" } },
+                                  [_vm._v(" mdi-plus ")]
+                                ),
+                                _vm._v(
+                                  "\n                      To-do List\n                  "
                                 )
                               ],
                               1
