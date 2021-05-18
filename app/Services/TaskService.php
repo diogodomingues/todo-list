@@ -9,7 +9,7 @@ use App\Services\TaskStatusService;
 class TaskService extends Service
 {      
     const TODOLIST_NOT_FOUND = 'To-do List not found';
-    const TASK_ERROR = 'Impossible update Task. Please contact support.';
+    const TASK_ERROR = 'Impossible update Task. Please Change Status.';
 
     /**
      * @var TodoListService

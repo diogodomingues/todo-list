@@ -25,9 +25,7 @@ class TodoListController extends Controller
      */
     public function getAllTodoLists(Request $request)
     {
-        $result = $this->service->getAllTodoLists();
-
-        return $result;
+        return $this->service->getAllTodoLists();
     }
 
     /**
@@ -81,15 +79,14 @@ class TodoListController extends Controller
     }
 
     /**
-     * delete todo-list
+     * delete todo-list by id
+     * 
+     * @param int $todoId
      * 
      * @param Request $request
      */
     public function deleteTodoList(Request $request, int $todoId)
     {
-        $result = $this->service->deleteTodoList($todoId);
-
-        return $result;
-    }
-    
+        return $this->service->deleteTodoList($todoId);
+    }    
 }

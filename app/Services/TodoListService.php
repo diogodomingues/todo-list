@@ -71,7 +71,7 @@ class TodoListService extends Service
     }
 
     /**
-     * delete to-do list
+     * delete to-do list by Id
      */
     public function deleteTodoList(int $todoId)
     {
@@ -82,5 +82,5 @@ class TodoListService extends Service
         $taskService->deleteTaskByTodoListId($todoId);
 
         return $this->repository->deleteTodoList($todoId);
-    }    
+    }
 }
